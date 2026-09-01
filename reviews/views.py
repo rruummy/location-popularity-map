@@ -1,11 +1,12 @@
 from django.shortcuts import get_object_or_404
+from locations.cache import clear_locations_cache
 
 from rest_framework import generics
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from reviews.models import Review, ReviewVote
 from reviews.serializers import ReviewSerializer, ReviewVoteSerializer
-from users.permissions import IsOwnerOrAdmin
+from users.permissions import IsReviewOwnerOrAdmin
 
 
 class ReviewListCreateView(generics.ListCreateAPIView):
@@ -19,9 +20,8 @@ class ReviewListCreateView(generics.ListCreateAPIView):
         return [IsAuthenticated()]
 
     def perform_create(self, serializer):
-        serializer.save(
-            user=self.request.user
-        )
+        serializer.save(user=self.request.user)
+        clear_locations_cache()
 
 
 class ReviewRetrieveUpdateDestroyView(
@@ -36,7 +36,7 @@ class ReviewRetrieveUpdateDestroyView(
 
         return [
             IsAuthenticated(),
-            IsOwnerOrAdmin(),
+            IsReviewOwnerOrAdmin(),
         ]
 
 

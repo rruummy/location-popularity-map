@@ -28,11 +28,17 @@ class ReviewSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         request = self.context["request"]
-        location = attrs["location"]
+
+        location = attrs.get("location")
+
+        if location is None and self.instance:
+            location = self.instance.location
 
         if Review.objects.filter(
             location=location,
             user=request.user,
+        ).exclude(
+            pk=self.instance.pk if self.instance else None
         ).exists():
             raise serializers.ValidationError(
                 {

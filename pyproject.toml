@@ -10,6 +10,7 @@ dependencies = [
     "django-redis>=7.0.0",
     "djangorestframework>=3.18.0",
     "drf-spectacular>=0.30.0",
+    "pandas>=3.0.5",
     "psycopg2-binary>=2.9.12",
     "python-dotenv>=1.2.3",
     "redis>=8.1.0",
